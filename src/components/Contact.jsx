@@ -35,7 +35,7 @@ const Contact = () => {
 //
 //
 
-    emailjs.send('service_801qv6m','template_10osssc',{
+    emailjs.send('service_1rrhd9q','template_10osssc',{
       from_name:form.name,
       to_name:'Aditya',
       from_email:form.email,
