@@ -47,6 +47,8 @@ const Contact = () => {
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) return;
     setLoading(true);
+    
+    // Send email to yourself (existing functionality)
     emailjs.send('service_1rrhd9q','template_10osssc',{
       from_name:form.name,
       to_name:'Aditya',
@@ -56,6 +58,17 @@ const Contact = () => {
     },
     'r_g2ux3B9YSJNuAX5'
   ).then(()=>{
+    // Send thank you email to the user
+    return emailjs.send('service_1rrhd9q','template_10osssc',{
+      from_name:'Aditya',
+      to_name:form.name,
+      from_email:'bhujadeaditya28@gmail.com',
+      to_email:form.email,
+      message:`Dear ${form.name},\n\nThank you for contacting me! I have received your message and truly appreciate you reaching out.\n\nI will review your message and get back to you as soon as possible. Looking forward to working with you!\n\nBest regards,\nAditya Bhujade`,
+    },
+    'r_g2ux3B9YSJNuAX5'
+    );
+  }).then(()=>{
     setLoading(false)
     setShowSuccess(true);
     setform({
