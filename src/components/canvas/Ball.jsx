@@ -2,7 +2,6 @@ import React, { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Decal, Float, OrbitControls, Preload, useTexture } from '@react-three/drei';
 import CanvasLoader from '../Loader';
-import { ErrorBoundary } from 'react-error-boundary';  // Import from react-error-boundary
 
 const Ball = (props) => {
   const [decal] = useTexture([props.imgUrl]);
@@ -32,24 +31,23 @@ const Ball = (props) => {
 const BallCanvas = ({ icon }) => {
   return (
     <Canvas 
-      frameloop="demand" 
+      frameloop="always" 
       gl={{ 
         preserveDrawingBuffer: true,
-        powerPreference: "high-performance",
+        powerPreference: 'default',
+        antialias: true,
         alpha: true
       }}
       dpr={[1, 2]}
     >
-      <ErrorBoundary FallbackComponent={<h2>Something went wrong.</h2>}>
-        <Suspense fallback={<CanvasLoader />}>
-          <OrbitControls 
-            enableZoom={false} 
-            enablePan={false}
-            enableRotate={true}
-          />
-          <Ball imgUrl={icon} />
-        </Suspense>
-      </ErrorBoundary>
+      <Suspense fallback={<CanvasLoader />}>
+        <OrbitControls 
+          enableZoom={false} 
+          enablePan={false}
+          enableRotate={true}
+        />
+        <Ball imgUrl={icon} />
+      </Suspense>
       <Preload all />
     </Canvas>
   );

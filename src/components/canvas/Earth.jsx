@@ -51,9 +51,13 @@ const EarthCanvas = ()=>{
     <EarthErrorBoundary>
       <Canvas 
         shadows 
-        frameloop='demand' 
+        frameloop='always' 
         dpr={[1, 2]}
-        gl={{preserveDrawingBuffer:true}} 
+        gl={{
+          preserveDrawingBuffer:true,
+          powerPreference: 'default',
+          antialias: true
+        }} 
         camera={{fov:45,near:0.1,far:200,position:[-4,3,6]}}
         style={{ width: '100%', height: '100%' }}
       >

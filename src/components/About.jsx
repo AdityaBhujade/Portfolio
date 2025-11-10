@@ -34,7 +34,11 @@ const About = () => {
             <h2 className={styles.sectionHeadText}>Overview</h2>
           </motion.div>
           <motion.p variants={fadeIn("","",0.1,1)} className='mt-4 text-secondary text-[17px] max-w-3xl leading-[30px]'>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae voluptas ipsam consequatur tempora commodi illum ea voluptates quia? Harum possimus repellat sint dolorem assumenda distinctio in earum vel laborum omnis.</p>
+          <p>I’m a passionate developer who loves turning ideas into seamless, interactive, and visually stunning digital experiences. With a strong foundation in frontend and full-stack development, I focus on writing clean, efficient code and creating user interfaces that are both intuitive and aesthetically appealing.
+
+Over the years, I’ve honed my skills in modern web technologies like HTML, CSS, JavaScript, React, and Node.js, while also diving deep into Python for backend automation and data-driven applications.
+
+My goal is simple — to bridge design and technology to craft meaningful digital products that leave a lasting impact.</p>
           </motion.p>
         </div>
       </div>
