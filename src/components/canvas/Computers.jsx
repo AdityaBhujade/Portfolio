@@ -1,38 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Preload, useGLTF } from '@react-three/drei';
-import CanvasLoader from '../Loader';
+import React, { Suspense, useEffect, useState } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { OrbitControls, Preload, useGLTF } from '@react-three/drei'
 
-class ErrorBoundary extends React.Component {
+import CanvasLoader from '../Loader'
+
+// Error Boundary Component
+class ComputerErrorBoundary extends React.Component {
   constructor(props) {
-    super(props);
-    this.state = { hasError: false };
+    super(props)
+    this.state = { hasError: false }
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true };
+    return { hasError: true }
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error("Error caught by ErrorBoundary:", error, errorInfo);
+    console.log('Computer model error:', error, errorInfo)
   }
 
   render() {
     if (this.state.hasError) {
-      return <div>Something went wrong. Please try again later.</div>;
+      return (
+        <div className="flex justify-center items-center h-full">
+          <div className="text-white text-center">
+            <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-50 animate-pulse"></div>
+            <p>3D Model Loading...</p>
+          </div>
+        </div>
+      )
     }
 
-    return this.props.children; 
+    return this.props.children
   }
 }
 
-const Computers = ({ ismobile }) => {
-  const { scene } = useGLTF('./desktop_pc/scene.gltf');
+const Computers = ({ isMobile }) => {
+  const computer = useGLTF('./desktop_pc/scene.gltf')
+
   return (
     <mesh>
       <hemisphereLight intensity={0.15} groundColor='black' />
-      <pointLight intensity={1} />
       <spotLight
         position={[-20, 50, 10]}
         angle={0.12}
@@ -42,43 +50,63 @@ const Computers = ({ ismobile }) => {
         shadow-mapSize={1024}
       />
       <primitive
-        object={scene}
-        scale={ismobile ? 0.65 : 0.7}
-        position={ismobile ? [0, -3, -2.2]:[0, -3.25, -1.5]}
+        object={computer.scene}
+        scale={isMobile ? 0.7 : 0.75}
+        position={isMobile ? [0, -3, -2.2] : [0, -3.25, -1.5]}
         rotation={[-0.01, -0.2, -0.1]}
       />
     </mesh>
-  );
-};
+  )
+}
+
+// Preload the model
+useGLTF.preload('./desktop_pc/scene.gltf')
 
 const ComputersCanvas = () => {
-  //add a listener for changes to the screen size 
-  const [ismobile,setismobile] = useState(false);
-  useEffect(()=>{
-    const mediaQuery = window.matchMedia('(max-width: 400px)');
-    //set the initial value of the 'ismobile' state variable to the result of the media query
-    setismobile(mediaQuery.matches);
-    //define a callback function to handle changes to the media query
-    const handleMediaquery = (event) =>{
-      setismobile(event.matches);
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    // Add a listener for changes to the screen size
+    const mediaQuery = window.matchMedia('(max-width: 500px)')
+
+    // Set the initial value of the `isMobile` state variable
+    setIsMobile(mediaQuery.matches)
+
+    // Define a callback function to handle changes to the media query
+    const handleMediaQueryChange = (event) => {
+      setIsMobile(event.matches)
     }
 
-    mediaQuery.addEventListener('change',handleMediaquery);
-    return ()=>{
-      mediaQuery.removeEventListener('change',handleMediaquery);
+    // Add the callback function as a listener for changes to the media query
+    mediaQuery.addEventListener('change', handleMediaQueryChange)
+
+    // Remove the listener when the component is unmounted
+    return () => {
+      mediaQuery.removeEventListener('change', handleMediaQueryChange)
     }
-  },[])
+  }, [])
+
   return (
-    <Canvas frameloop='demand' shadows camera={{ position: [20, 3, 5], fov: 25 }} gl={{ preserveDrawingBuffer: true }}>
-      <ErrorBoundary>
+    <ComputerErrorBoundary>
+      <Canvas
+        frameloop='demand'
+        shadows
+        dpr={[1, 2]}
+        camera={{ position: [20, 3, 5], fov: 25 }}
+        gl={{ preserveDrawingBuffer: true }}
+      >
         <Suspense fallback={<CanvasLoader />}>
-          <OrbitControls enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 2} />
-          <Computers ismobile={ismobile}/>
+          <OrbitControls
+            enableZoom={false}
+            maxPolarAngle={Math.PI / 2}
+            minPolarAngle={Math.PI / 2}
+          />
+          <Computers isMobile={isMobile} />
         </Suspense>
-      </ErrorBoundary>
-      <Preload all />
-    </Canvas>
-  );
-};
+        <Preload all />
+      </Canvas>
+    </ComputerErrorBoundary>
+  )
+}
 
 export default ComputersCanvas;

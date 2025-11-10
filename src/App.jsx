@@ -5,7 +5,7 @@ import {About, Contact, Experience, Feedbacks, Hero, Navbar, Tech, Works, StarsC
 const App = () => {
   return (
     <BrowserRouter>
-      <div className="relative bg-primary">
+      <div className="relative bg-primary w-full min-h-screen overflow-x-hidden">
           <div className="bg-hero-pattern bg-cover bg-no-repeat bg-center">
             <Navbar />
             <Hero />

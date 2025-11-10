@@ -31,10 +31,22 @@ const Ball = (props) => {
 
 const BallCanvas = ({ icon }) => {
   return (
-    <Canvas frameloop="demand" gl={{ preserveDrawingBuffer: true }}>
+    <Canvas 
+      frameloop="demand" 
+      gl={{ 
+        preserveDrawingBuffer: true,
+        powerPreference: "high-performance",
+        alpha: true
+      }}
+      dpr={[1, 2]}
+    >
       <ErrorBoundary FallbackComponent={<h2>Something went wrong.</h2>}>
         <Suspense fallback={<CanvasLoader />}>
-          <OrbitControls enableZoom={false} />
+          <OrbitControls 
+            enableZoom={false} 
+            enablePan={false}
+            enableRotate={true}
+          />
           <Ball imgUrl={icon} />
         </Suspense>
       </ErrorBoundary>
