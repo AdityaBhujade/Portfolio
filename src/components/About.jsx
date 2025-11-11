@@ -10,7 +10,18 @@ import { SectionWrapper } from '../hoc'
 const ServiceCard = ({index,title,icon}) =>{
   return(
     <Tilt 
-      options={{max: 45, scale: 1, speed: 450}}
+      options={{
+        max: 45, 
+        scale: 1, 
+        speed: 450,
+        glare: true,
+        'max-glare': 0.5,
+        gyroscope: true,
+        gyroscopeMinAngleX: -45,
+        gyroscopeMaxAngleX: 45,
+        gyroscopeMinAngleY: -45,
+        gyroscopeMaxAngleY: 45
+      }}
       className="w-[280px] sm:w-[320px]"
     >
       <motion.div variants={fadeIn("right","spring",0.5 * index,0.75)}

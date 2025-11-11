@@ -31,20 +31,9 @@ const Hero = () => {
   }, [])
 
   return (
-    <section className='relative w-full h-screen mx-auto'>
-      <div className={`${styles.paddingX} absolute inset-0 top-[120px] w-full flex flex-row items-start gap-5`}>
-        <div className="flex flex-col justify-center items-center mt-5">
-          <div className="w-5 h-5 rounded-full bg-[#915eff]"></div>
-          <div className="w-1 sm:h-80 h-40 violet-gradient"></div>
-        </div>
-        <div className="">
-          <h1 className={`${styles.heroHeadText}`}>Hi, I'm <span className='text-[#915eff]'>Aditya</span></h1>
-          <p className={`${styles.heroSubText} mt-2 text-white-100`}>I transform ideas into seamless digital experiences,into stunning websites.</p>
-        </div>
-      </div>
-      
-      {/* 3D Computer Model */}
-      <div className="w-full h-full overflow-hidden">
+    <section className='relative w-full h-screen mx-auto' style={{ backgroundColor: '#050816' }}>
+      {/* 3D Computer Model - Background Layer */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden" style={{ zIndex: 0 }}>
         <Suspense fallback={
           <div className="flex justify-center items-center h-full">
             <div className="w-32 h-32 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
@@ -54,8 +43,21 @@ const Hero = () => {
         </Suspense>
       </div>
 
-      <div className="absolute xs:bottom-10 bottom-32 w-full flex justify-center items-center">
-          <a href="#about">
+      {/* Text Content - Foreground Layer */}
+      <div className={`${styles.paddingX} absolute inset-0 top-[120px] w-full flex flex-row items-start gap-5`} style={{ zIndex: 1, pointerEvents: 'none' }}>
+        <div className="flex flex-col justify-center items-center mt-5">
+          <div className="w-5 h-5 rounded-full bg-[#915eff]"></div>
+          <div className="w-1 sm:h-80 h-40 violet-gradient"></div>
+        </div>
+        <div className="">
+          <h1 className={`${styles.heroHeadText}`}>Hi, I'm <span className='text-[#915eff]'>Aditya</span></h1>
+          <p className={`${styles.heroSubText} mt-2 text-white-100`}>I transform ideas into seamless digital experiences,into stunning websites.</p>
+        </div>
+      </div>
+
+      {/* Scroll Indicator */}
+      <div className="absolute xs:bottom-10 bottom-32 w-full flex justify-center items-center" style={{ zIndex: 1, pointerEvents: 'none' }}>
+          <a href="#about" style={{ pointerEvents: 'auto' }}>
             <div className="w-[35px] h-[64px] rounded-3xl border-4 border-secondary flex justify-center items-start p-2">
               <motion.dev 
               animate={{

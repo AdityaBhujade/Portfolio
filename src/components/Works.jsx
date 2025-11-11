@@ -13,7 +13,21 @@ import { p } from 'framer-motion/client';
 const ProjectCard = ({index, name, description, tags, image, source_code_link})=>{
     return(
       <motion.div variants={fadeIn("up","spring",index*0.5, 0.75)}>
-        <Tilt options={ {max: 45,scale:1,speed: 450} } className="bg-tertiary p-6 rounded-2xl sm:w-[420px] w-full">
+        <Tilt 
+          options={{ 
+            max: 45,
+            scale: 1,
+            speed: 450,
+            glare: true,
+            'max-glare': 0.5,
+            gyroscope: true,
+            gyroscopeMinAngleX: -45,
+            gyroscopeMaxAngleX: 45,
+            gyroscopeMinAngleY: -45,
+            gyroscopeMaxAngleY: 45
+          }} 
+          className="bg-tertiary p-6 rounded-2xl sm:w-[420px] w-full"
+        >
           <div className='relative w-full h-[300px]'>
             <img src={image} alt={name} className='w-full h-full object-cover rounded-2xl '/>
             <div className='absolute inset-0 flex justify-end m-3 card-img_hover'>
