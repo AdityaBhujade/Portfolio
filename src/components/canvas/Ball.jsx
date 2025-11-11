@@ -32,10 +32,45 @@ const Ball = (props) => {
   );
 };
 
+// Error Boundary for Ball
+class BallErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.log('Ball rendering error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          <img 
+            src={this.props.icon} 
+            alt="tech" 
+            className="w-16 h-16 object-contain"
+            style={{ filter: 'drop-shadow(0 0 10px rgba(145, 94, 255, 0.5))' }}
+          />
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 const BallCanvas = ({ icon }) => {
   const [isMobile, setIsMobile] = useState(false);
+  const [isWebGLSupported, setIsWebGLSupported] = useState(true);
 
   useEffect(() => {
+    // Check for mobile
     const mediaQuery = window.matchMedia('(max-width: 768px)');
     setIsMobile(mediaQuery.matches);
 
@@ -45,31 +80,59 @@ const BallCanvas = ({ icon }) => {
 
     mediaQuery.addEventListener('change', handleMediaQueryChange);
 
+    // Check WebGL support
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!gl) {
+        setIsWebGLSupported(false);
+      }
+    } catch (e) {
+      setIsWebGLSupported(false);
+    }
+
     return () => {
       mediaQuery.removeEventListener('change', handleMediaQueryChange);
     };
   }, []);
 
-  return (
-    <Canvas
-      frameloop="demand"
-      dpr={[1, 2]}
-      gl={{
-        preserveDrawingBuffer: true,
-        powerPreference: 'high-performance',
-        antialias: true,
-        alpha: true,
-      }}
-    >
-      <Suspense fallback={<CanvasLoader />}>
-        <OrbitControls
-          enableZoom={false}
-          enablePan={false}
+  // Fallback for no WebGL support
+  if (!isWebGLSupported) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <img 
+          src={icon} 
+          alt="tech" 
+          className="w-16 h-16 object-contain"
+          style={{ filter: 'drop-shadow(0 0 10px rgba(145, 94, 255, 0.5))' }}
         />
-        <Ball imgUrl={icon} />
-      </Suspense>
-      <Preload all />
-    </Canvas>
+      </div>
+    );
+  }
+
+  return (
+    <BallErrorBoundary icon={icon}>
+      <Canvas
+        frameloop="demand"
+        dpr={[1, 2]}
+        gl={{
+          preserveDrawingBuffer: true,
+          powerPreference: 'high-performance',
+          antialias: true,
+          alpha: true,
+          failIfMajorPerformanceCaveat: false,
+        }}
+      >
+        <Suspense fallback={<CanvasLoader />}>
+          <OrbitControls
+            enableZoom={false}
+            enablePan={false}
+          />
+          <Ball imgUrl={icon} />
+        </Suspense>
+        <Preload all />
+      </Canvas>
+    </BallErrorBoundary>
   );
 };
 

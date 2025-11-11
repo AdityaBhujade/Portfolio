@@ -118,6 +118,16 @@
 canvas {
   width: 100% !important;
   height: 100% !important;
+  background: transparent !important;
+}
+
+/* Ensure proper rendering on all devices */
+body, html {
+  background-color: #050816;
+}
+
+#root {
+  background-color: #050816;
 }
 
 /* Mobile optimizations */

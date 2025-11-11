@@ -66,6 +66,7 @@ useGLTF.preload('./desktop_pc/scene.gltf')
 
 const ComputersCanvas = () => {
   const [isMobile, setIsMobile] = useState(false)
+  const [isWebGLSupported, setIsWebGLSupported] = useState(true)
 
   useEffect(() => {
     // Add a listener for changes to the screen size
@@ -82,11 +83,34 @@ const ComputersCanvas = () => {
     // Add the callback function as a listener for changes to the media query
     mediaQuery.addEventListener('change', handleMediaQueryChange)
 
+    // Check WebGL support
+    try {
+      const canvas = document.createElement('canvas')
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
+      if (!gl) {
+        setIsWebGLSupported(false)
+      }
+    } catch (e) {
+      setIsWebGLSupported(false)
+    }
+
     // Remove the listener when the component is unmounted
     return () => {
       mediaQuery.removeEventListener('change', handleMediaQueryChange)
     }
   }, [])
+
+  // Fallback for no WebGL support
+  if (!isWebGLSupported) {
+    return (
+      <div className="flex justify-center items-center h-full" style={{ backgroundColor: '#050816' }}>
+        <div className="text-white text-center">
+          <div className="w-32 h-32 mx-auto mb-4 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-50 animate-pulse"></div>
+          <p>Loading Experience...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <ComputerErrorBoundary>
@@ -102,6 +126,7 @@ const ComputersCanvas = () => {
           alpha: true,
           stencil: false,
           depth: true,
+          failIfMajorPerformanceCaveat: false,
         }}
       >
         <Suspense fallback={<CanvasLoader />}>
